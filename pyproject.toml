@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "game-manager"
+version = "0.1.0"
+description = "Python package to manage game logic"
+authors = ["JulienGL <jgl94@free.fr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+mypy = "^1.11.1"
+vertyces = {git = "https://github.com/JulienGasparLopes/Vertyces.git"}
+pillow = "10.0.0"
+isort = "^5.13.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
