@@ -1,15 +1,15 @@
 from tkinter import Canvas
 
 from PIL import Image as PilImage
-from PIL import ImageTk
+from PIL import ImageTk as PILImageTk
 from vertyces.vertex.vertex2f import Vertex2f
 
 from game_manager.graphic.renderer import Image
 
 
 class ImageTk(Image):
-    tk_image: ImageTk
-    image: ImageTk.PhotoImage | None = None
+    tk_image: PilImage.Image
+    image: PILImageTk.PhotoImage | None = None
 
     def __init__(
         self,
@@ -24,5 +24,5 @@ class ImageTk(Image):
 
     def render(self, canvas: Canvas, position: Vertex2f) -> None:
         if not self.image:
-            self.image = ImageTk.PhotoImage(self.tk_image)
+            self.image = PILImageTk.PhotoImage(self.tk_image)
         canvas.create_image(position.x, position.y, image=self.image, anchor="nw")

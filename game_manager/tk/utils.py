@@ -16,7 +16,7 @@ def initialize_tk_context() -> tuple[Window, Renderer, Mouse, Keyboard]:
     keyboard = Keyboard()
     mouse = Mouse()
 
-    def _handle_left_mouse_release(event: Any) -> object:
+    def _handle_left_mouse_release(event: Any) -> dict[str, MouseButton]:
         mouse.__mouse_release__(Vertex2f(event.x, event.y), MouseButton.LEFT)
         return {}
 

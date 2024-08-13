@@ -17,6 +17,7 @@ class WindowTk(Window):
             self._window, width=width, height=height, highlightthickness=0
         )
         self.canvas.pack(fill="both", expand=True)
+        self._window.protocol("WM_DELETE_WINDOW", self._on_close)
 
     def set_background_color(self, color: Vertex3f) -> None:
         self._window.configure(bg=v3f_to_hex(color))
@@ -26,3 +27,8 @@ class WindowTk(Window):
             self._window.deiconify()
         else:
             self._window.withdraw()
+
+    def close(self) -> None:
+        self._window.destroy()
+        self._window.update()
+        print("Window closed")

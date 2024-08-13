@@ -1,17 +1,19 @@
-from abc import ABC, abstractmethod
 import threading
+from abc import ABC, abstractmethod
 from time import time_ns
+from typing import Generic
+
+from game_manager.messaging.message_client import MessageClient, MessageManagerType
 
 
-class LogicManager(ABC):
-    _update_per_second: int = 50
+class LogicManager(ABC, MessageClient[MessageManagerType], Generic[MessageManagerType]):
     _running: bool = True
+    _is_disposed: bool = False
+
+    _update_per_second: int = 50
     _last_update_ns: float
 
     _thread: threading.Thread
-
-    def __init__(self):
-        pass
 
     def set_update_per_second(self, ups: int) -> None:
         self._update_per_second = ups
@@ -33,6 +35,7 @@ class LogicManager(ABC):
                 _last_update_ns = current_time
 
         self.dispose()
+        self._is_disposed = True
 
     @abstractmethod
     def update(self, delta_ns: float) -> None:
@@ -41,3 +44,7 @@ class LogicManager(ABC):
     @abstractmethod
     def dispose(self) -> None:
         pass
+
+    @property
+    def is_disposed(self) -> bool:
+        return self._is_disposed
