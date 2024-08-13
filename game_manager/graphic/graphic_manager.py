@@ -3,10 +3,13 @@ from abc import ABC, abstractmethod
 from time import time_ns
 from typing import Generic
 
+from vertyces.vertex.vertex2f import Vertex2f
+
+from game_manager.graphic.menu.menu import Menu
 from game_manager.graphic.renderer import Renderer
 from game_manager.graphic.window import Window
 from game_manager.io.keyboard import Keyboard
-from game_manager.io.mouse import Mouse
+from game_manager.io.mouse import Mouse, MouseButton
 from game_manager.messaging.message_client import MessageClient, MessageManagerType
 
 
@@ -22,6 +25,8 @@ class GraphicManager(
     _keyboard: Keyboard
     _mouse: Mouse
 
+    _current_menu: Menu | None = None
+
     def __init__(
         self, window: Window, renderer: Renderer, keyboard: Keyboard, mouse: Mouse
     ) -> None:
@@ -29,6 +34,7 @@ class GraphicManager(
         self._renderer = renderer
         self._keyboard = keyboard
         self._mouse = mouse
+        mouse.set_button_release_callback(self._on_click)
 
     def start(self, main_thread: bool = True) -> None:
         if main_thread:
@@ -40,25 +46,8 @@ class GraphicManager(
     def stop(self) -> None:
         self._running = False
 
-    def _internal_loop(self) -> None:
-        _last_update_ns = time_ns()
-        while self._running:
-            current_time = time_ns()
-            delta_ns = current_time - _last_update_ns
-            if delta_ns > (1_000_000_000 / self._frame_per_second):
-                self._renderer.render_start()
-                self.render(delta_ns, self._renderer)
-                self._renderer.render_end()
-                _last_update_ns = current_time
-
-        self.dispose()
-        self._is_disposed = True
-
-    @abstractmethod
-    def render(self, delta_ns: float, renderer: Renderer) -> None: ...
-
-    @abstractmethod
-    def dispose(self) -> None: ...
+    def set_current_menu(self, menu: Menu | None) -> None:
+        self._current_menu = menu
 
     @property
     def is_disposed(self) -> bool:
@@ -75,3 +64,30 @@ class GraphicManager(
     @property
     def mouse(self) -> Mouse:
         return self._mouse
+
+    @abstractmethod
+    def dispose(self) -> None: ...
+
+    def _internal_loop(self) -> None:
+        _last_update_ns = time_ns()
+        while self._running:
+            current_time = time_ns()
+            delta_ns = current_time - _last_update_ns
+            if delta_ns > (1_000_000_000 / self._frame_per_second):
+                self._renderer.render_start()
+                self._render(delta_ns, self._renderer)
+                self._renderer.render_end()
+                _last_update_ns = current_time
+
+        self.dispose()
+        self._is_disposed = True
+
+    def _on_click(
+        self, button: MouseButton, position: Vertex2f, start_position: Vertex2f
+    ) -> None:
+        if self._current_menu:
+            self._current_menu._on_click(button, position, start_position)
+
+    def _render(self, delta_ns: float, renderer: Renderer) -> None:
+        if self._current_menu:
+            self._current_menu._render(delta_ns, renderer)

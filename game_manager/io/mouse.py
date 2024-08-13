@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import Callable
+
 from vertyces.vertex.vertex2f import Vertex2f
 
 
@@ -7,11 +9,16 @@ class MouseButton(Enum):
     RIGHT = 2
 
 
+ButtonReleaseCallback = Callable[[MouseButton, Vertex2f, Vertex2f], None]
+
+
 class Mouse:
     _position: Vertex2f
 
     _drag_origin: Vertex2f | None = None
     _drag_mouse_button: MouseButton | None = None
+
+    _button_release_callback: ButtonReleaseCallback | None = None
 
     def __init__(self) -> None:
         self._position = Vertex2f(0, 0)
@@ -28,9 +35,18 @@ class Mouse:
             self._drag_button = mouse_button
 
     def __mouse_release__(self, position: Vertex2f, mouse_button: MouseButton) -> None:
+        if self._button_release_callback:
+            self._button_release_callback(
+                mouse_button, position, self._drag_origin or position
+            )
         self._position = position.clone()
         self._drag_origin = None
         self._drag_mouse_button = None
+
+    def set_button_release_callback(
+        self, callback: ButtonReleaseCallback | None
+    ) -> None:
+        self._button_release_callback = callback
 
     @property
     def position(self) -> Vertex2f:
