@@ -66,5 +66,9 @@ class RenderInfoTkText(RenderInfoTk[Vertex3f]):
 
     def render(self, canvas: Canvas) -> None:
         canvas.create_text(
-            self.p1.x, self.p1.y, text=self.text, fill=v3f_to_hex(self.content)
+            self.p1.x,
+            self.p1.y,
+            text=self.text,
+            fill=v3f_to_hex(self.content),
+            anchor="nw",
         )

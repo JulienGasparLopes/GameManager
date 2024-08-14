@@ -31,7 +31,8 @@ class Menu(ABC):
 
     def _render(self, delta_ns: float, renderer: Renderer) -> None:
         for component in self._components:
-            component.render(renderer)
+            if component.visible:
+                component.render(renderer)
         self.render(delta_ns, renderer)
 
     @abstractmethod

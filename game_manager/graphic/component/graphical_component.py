@@ -8,14 +8,26 @@ from game_manager.io.mouse import MouseButton
 
 
 class GraphicalComponent(ABC):
-    _bounds: Rectangle
+    _visible: bool
 
-    def __init__(self, position: Vertex2f, dimension: Vertex2f) -> None:
-        self._bounds = Rectangle(position, dimension)
+    bounds: Rectangle
+
+    def __init__(
+        self, position: Vertex2f, dimension: Vertex2f, visible: bool = True
+    ) -> None:
+        self.bounds = Rectangle(position, dimension)
+        self._visible = visible
 
     @classmethod
     def from_rectangle(cls, rectangle: Rectangle) -> "GraphicalComponent":
         return cls(rectangle._p1, rectangle._bounds)
+
+    def show(self, visible: bool = True) -> None:
+        self._visible = visible
+
+    @property
+    def visible(self) -> bool:
+        return self._visible
 
     @abstractmethod
     def render(self, renderer: Renderer) -> None: ...

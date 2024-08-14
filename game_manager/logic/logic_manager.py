@@ -1,14 +1,18 @@
 import threading
 from abc import ABC, abstractmethod
 from time import time_ns
-from typing import Generic
+from typing import Generic, TypeVar
 
 from game_manager.logic.map.map import Map
 from game_manager.logic.uid_object import Uid
 from game_manager.messaging.message_client import MessageClient, MessageManagerType
 
+TMap = TypeVar("TMap", bound=Map)
 
-class LogicManager(ABC, MessageClient[MessageManagerType], Generic[MessageManagerType]):
+
+class LogicManager(
+    ABC, MessageClient[MessageManagerType], Generic[MessageManagerType, TMap]
+):
     _thread: threading.Thread
     _running: bool = True
     _is_disposed: bool = False
@@ -16,7 +20,10 @@ class LogicManager(ABC, MessageClient[MessageManagerType], Generic[MessageManage
     _update_per_second: int = 50
     _last_update_ns: float
 
-    _maps: dict[Uid, Map]
+    _maps: dict[Uid, TMap]
+
+    def __init__(self) -> None:
+        self._maps = {}
 
     def set_update_per_second(self, ups: int) -> None:
         self._update_per_second = ups
@@ -40,8 +47,14 @@ class LogicManager(ABC, MessageClient[MessageManagerType], Generic[MessageManage
         self.dispose()
         self._is_disposed = True
 
-    def add_map(self, map: Map) -> None:
+    def add_map(self, map: TMap) -> None:
         self._maps[map.uid] = map
+
+    def remove_map(self, map: TMap) -> None:
+        del self._maps[map.uid]
+
+    def get_map(self, uid: Uid) -> TMap | None:
+        return self._maps[uid]
 
     @property
     def is_disposed(self) -> bool:

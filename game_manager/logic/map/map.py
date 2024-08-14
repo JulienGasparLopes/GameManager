@@ -14,3 +14,6 @@ class Map(UIDObject):
     def remove_entity(self, entity: Entity) -> None:
         if entity.uid in self._entities:
             self._entities.pop(entity.uid)
+
+    def get_entity(self, uid: Uid) -> Entity | None:
+        return self._entities.get(uid)

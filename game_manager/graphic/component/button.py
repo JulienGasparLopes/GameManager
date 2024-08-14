@@ -27,8 +27,8 @@ class Button(GraphicalComponent, ABC):
     ) -> bool:
         if (
             button == MouseButton.LEFT
-            and self._bounds.contains(position)
-            and self._bounds.contains(start_position)
+            and self.bounds.contains(position)
+            and self.bounds.contains(start_position)
         ):
             self._action_callback()
             return True
