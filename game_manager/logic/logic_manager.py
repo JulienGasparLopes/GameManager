@@ -3,17 +3,20 @@ from abc import ABC, abstractmethod
 from time import time_ns
 from typing import Generic
 
+from game_manager.logic.map.map import Map
+from game_manager.logic.uid_object import Uid
 from game_manager.messaging.message_client import MessageClient, MessageManagerType
 
 
 class LogicManager(ABC, MessageClient[MessageManagerType], Generic[MessageManagerType]):
+    _thread: threading.Thread
     _running: bool = True
     _is_disposed: bool = False
 
     _update_per_second: int = 50
     _last_update_ns: float
 
-    _thread: threading.Thread
+    _maps: dict[Uid, Map]
 
     def set_update_per_second(self, ups: int) -> None:
         self._update_per_second = ups
@@ -37,14 +40,15 @@ class LogicManager(ABC, MessageClient[MessageManagerType], Generic[MessageManage
         self.dispose()
         self._is_disposed = True
 
-    @abstractmethod
-    def update(self, delta_ns: float) -> None:
-        pass
-
-    @abstractmethod
-    def dispose(self) -> None:
-        pass
+    def add_map(self, map: Map) -> None:
+        self._maps[map.uid] = map
 
     @property
     def is_disposed(self) -> bool:
         return self._is_disposed
+
+    @abstractmethod
+    def update(self, delta_ns: float) -> None: ...
+
+    @abstractmethod
+    def dispose(self) -> None: ...
