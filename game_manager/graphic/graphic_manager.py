@@ -14,7 +14,7 @@ from game_manager.messaging.message_client import MessageClient, MessageManagerT
 
 
 class GraphicManager(
-    ABC, MessageClient[MessageManagerType], Generic[MessageManagerType]
+    MessageClient[MessageManagerType], Generic[MessageManagerType], ABC
 ):
     _frame_per_second: int = 30
     _running: bool = True

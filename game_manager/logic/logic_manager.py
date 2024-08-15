@@ -11,7 +11,7 @@ TMap = TypeVar("TMap", bound=Map)
 
 
 class LogicManager(
-    ABC, MessageClient[MessageManagerType], Generic[MessageManagerType, TMap]
+    MessageClient[MessageManagerType], Generic[MessageManagerType, TMap], ABC
 ):
     _thread: threading.Thread
     _running: bool = True
