@@ -168,7 +168,7 @@ mypy = "^1.11.1"
 type = "git"
 url = "https://github.com/JulienGasparLopes/Vertyces.git"
 reference = "HEAD"
-resolved_reference = "c457e818bcfe90294fc2ebee4b1e815b58602bb0"
+resolved_reference = "ab020de16fab016ecfac0c3531d0766c6c1c9fce"
 
 [metadata]
 lock-version = "2.0"

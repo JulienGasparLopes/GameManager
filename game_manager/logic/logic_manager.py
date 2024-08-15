@@ -42,6 +42,8 @@ class LogicManager(
             delta_ns = current_time - _last_update_ns
             if delta_ns > (1_000_000_000 / self._update_per_second):
                 self.update(delta_ns)
+                for map in self._maps.values():
+                    map._update(delta_ns)
                 _last_update_ns = current_time
 
         self.dispose()

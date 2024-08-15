@@ -1,11 +1,14 @@
+from abc import ABC
+
+from vertyces.form.rectangle import Rectangle
 from vertyces.vertex.vertex2f import Vertex2f
 
-from game_manager.logic.entity.tiled_entity import TileEntity
+from game_manager.logic.entity.entity_moveable import EntityMoveable
 from game_manager.logic.map.map import Map
 from game_manager.logic.map.tile import TILE_SIZE, VOID_TILE, Tile
 
 
-class TiledMap(Map):
+class TiledMap(Map, ABC):
     _width: int
     _height: int
     _tiles: list[list[Tile]]
@@ -44,3 +47,51 @@ class TiledMap(Map):
     @property
     def height(self) -> int:
         return self._height
+
+    def get_tiles_in_bounds(self, bounds: Rectangle) -> list[Tile]:
+        tiles = []
+        for y in range(
+            int(bounds._p1.y // TILE_SIZE), int(bounds._p2.y // TILE_SIZE) + 1
+        ):
+            for x in range(
+                int(bounds._p1.x // TILE_SIZE), int(bounds._p2.x // TILE_SIZE) + 1
+            ):
+                if 0 <= x < self._width and 0 <= y < self._height:
+                    tiles.append(self.get_tile(x, y))
+        return tiles
+
+    def _calculate_entity_new_position(
+        self, delta_ns: float, entity: EntityMoveable
+    ) -> Vertex2f | None:
+        # TODO: try to avoid code duplication with the same method in Map
+        delta_position = entity.direction.multiplied(
+            entity.speed * delta_ns / 10_000_000
+        )
+        possible_new_positions = [
+            entity.bounds._p1.translated(delta_position),
+            entity.bounds._p1.translated(Vertex2f(delta_position.x, 0)),
+            entity.bounds._p1.translated(Vertex2f(0, delta_position.y)),
+        ]
+        new_position: Vertex2f | None = None
+        for possible_new_position in possible_new_positions:
+            new_position = possible_new_position
+            new_bounds = Rectangle(possible_new_position, entity.bounds._bounds)
+            for other_entity in self._entities.values():
+                if other_entity == entity:
+                    continue
+                if other_entity.bounds.collides(new_bounds):
+                    new_position = None
+                    break
+
+            if new_position is None:
+                continue
+
+            for tile in self.get_tiles_in_bounds(new_bounds):
+                if not tile.walkable:
+                    new_position = None
+                    break
+
+            if new_position is not None:
+                break
+
+        return new_position
