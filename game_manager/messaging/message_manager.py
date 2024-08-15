@@ -16,3 +16,6 @@ class MessageManager(ABC):
     ) -> None:
         message_client_left.set_message_manager(self)
         message_client_right.set_message_manager(self)
+
+        message_client_left.on_connect()
+        message_client_right.on_connect()

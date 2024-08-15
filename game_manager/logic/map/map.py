@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from vertyces.form.rectangle import Rectangle
 from vertyces.vertex.vertex2f import Vertex2f
 
+from game_manager.logic.entity.entity import Entity
 from game_manager.logic.entity.entity_moveable import EntityMoveable
 from game_manager.logic.uid_object import Uid, UIDObject
-from local.test_logic_manager import Entity
 
 
 class Map(UIDObject, ABC):
