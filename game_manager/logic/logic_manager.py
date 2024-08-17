@@ -1,4 +1,5 @@
 import threading
+import time
 from abc import ABC, abstractmethod
 from time import time_ns
 from typing import Generic, TypeVar
@@ -13,6 +14,10 @@ TMap = TypeVar("TMap", bound=Map)
 class LogicManager(
     MessageClient[MessageManagerType], Generic[MessageManagerType, TMap], ABC
 ):
+    _current_ups_counter: int = 0
+    _last_ups_count_time: float = 0
+    _current_ups: int = 0
+
     _thread: threading.Thread
     _running: bool = True
     _is_disposed: bool = False
@@ -46,6 +51,18 @@ class LogicManager(
                     map._update(delta_ns)
                 _last_update_ns = current_time
 
+                self._current_ups_counter += 1
+                current_time = time_ns()
+                if current_time - self._last_ups_count_time > 1_000_000_000:
+                    self._current_ups = self._current_ups_counter
+                    self._current_ups_counter = 0
+                    self._last_ups_count_time = current_time
+            else:
+                time.sleep(
+                    (((1_000_000_000 / self._update_per_second) - delta_ns) * 0.95)
+                    / 1_000_000_000
+                )
+
         self.dispose()
         self._is_disposed = True
 
@@ -61,6 +78,10 @@ class LogicManager(
     @property
     def is_disposed(self) -> bool:
         return self._is_disposed
+
+    @property
+    def ups(self) -> int:
+        return self._current_ups
 
     @abstractmethod
     def update(self, delta_ns: float) -> None: ...

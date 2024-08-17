@@ -11,7 +11,7 @@ class WindowTk(Window):
 
     def __init__(self, width: int, height: int, title: str) -> None:
         self._window = tk.Tk()
-        self._window.title(title)
+        self.set_title(title)
 
         self.canvas = tk.Canvas(
             self._window, width=width, height=height, highlightthickness=0
@@ -32,3 +32,6 @@ class WindowTk(Window):
         self._window.destroy()
         self._window.update()
         print("Window closed")
+
+    def set_title(self, title: str) -> None:
+        self._window.title(title)

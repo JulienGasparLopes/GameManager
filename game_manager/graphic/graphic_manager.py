@@ -1,4 +1,5 @@
 import threading
+import time
 from abc import ABC, abstractmethod
 from time import time_ns
 from typing import Generic
@@ -16,7 +17,11 @@ from game_manager.messaging.message_client import MessageClient, MessageManagerT
 class GraphicManager(
     MessageClient[MessageManagerType], Generic[MessageManagerType], ABC
 ):
-    _frame_per_second: int = 30
+    _current_fps_counter: int = 0
+    _last_fps_count_time: float = 0
+    _current_fps: int = 0
+
+    _frame_per_second: int = 50
     _running: bool = True
     _is_disposed: bool = False
 
@@ -38,6 +43,7 @@ class GraphicManager(
 
     def start(self, main_thread: bool = True) -> None:
         if main_thread:
+            self._last_fps_count_time = time_ns()
             self._internal_loop()
         else:
             _thread = threading.Thread(target=self._internal_loop)
@@ -79,6 +85,18 @@ class GraphicManager(
                 self._renderer.render_end()
                 _last_update_ns = current_time
 
+                self._current_fps_counter += 1
+                current_time = time_ns()
+                if current_time - self._last_fps_count_time > 1_000_000_000:
+                    self._current_fps = self._current_fps_counter
+                    self._current_fps_counter = 0
+                    self._last_fps_count_time = current_time
+            else:
+                time.sleep(
+                    (((1_000_000_000 / self._frame_per_second) - delta_ns) * 0.95)
+                    / 1_000_000_000
+                )
+
         self.dispose()
         self._is_disposed = True
 
@@ -91,3 +109,7 @@ class GraphicManager(
     def _render(self, delta_ns: float, renderer: Renderer) -> None:
         if self._current_menu:
             self._current_menu._render(delta_ns, renderer)
+
+    @property
+    def fps(self) -> int:
+        return self._current_fps
