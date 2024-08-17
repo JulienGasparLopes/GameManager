@@ -9,15 +9,24 @@ from game_manager.logic.map.tile import TILE_SIZE, VOID_TILE, Tile
 
 
 class TiledMap(Map, ABC):
+    _width_in_tiles: int
+    _height_in_tiles: int
     _width: int
     _height: int
     _tiles: list[list[Tile]]
 
-    def __init__(self, width: int, height: int, default_tile: Tile = VOID_TILE) -> None:
+    def __init__(
+        self, width_in_tiles: int, height_in_tiles: int, default_tile: Tile = VOID_TILE
+    ) -> None:
         super().__init__()
-        self._width = width
-        self._height = height
-        self._tiles = [[default_tile for _ in range(width)] for _ in range(height)]
+        self._width = width_in_tiles * TILE_SIZE
+        self._height = height_in_tiles * TILE_SIZE
+        self._width_in_tiles = width_in_tiles
+        self._height_in_tiles = height_in_tiles
+        self._tiles = [
+            [default_tile for _ in range(width_in_tiles)]
+            for _ in range(height_in_tiles)
+        ]
 
     @classmethod
     def from_tiles(cls, tiles: list[list[Tile]]) -> "TiledMap":
@@ -39,6 +48,14 @@ class TiledMap(Map, ABC):
 
     def set_tile(self, x: int, y: int, tile: Tile) -> None:
         self._tiles[y][x] = tile
+
+    @property
+    def width_in_tiles(self) -> int:
+        return self._width_in_tiles
+
+    @property
+    def height_in_tiles(self) -> int:
+        return self._height
 
     @property
     def width(self) -> int:

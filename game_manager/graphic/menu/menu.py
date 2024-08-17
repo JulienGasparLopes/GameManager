@@ -25,15 +25,16 @@ class Menu(ABC):
     ) -> None:
         # TODO: sort component by z-index
         for component in self._components:
-            if component.on_click(button, position, start_position):
+            if component._on_click(button, position, start_position):
                 break
         self.on_click(button, position, start_position)
 
     def _render(self, delta_ns: float, renderer: Renderer) -> None:
-        for component in self._components:
-            if component.visible:
-                component.render(renderer)
         self.render(delta_ns, renderer)
+
+        for component in self._components:
+            renderer.set_offset(Vertex2f(0, 0))
+            component._render(renderer)
 
     @abstractmethod
     def render(self, delta_ns: float, renderer: Renderer) -> None: ...

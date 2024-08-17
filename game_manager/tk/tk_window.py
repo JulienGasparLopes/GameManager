@@ -1,4 +1,5 @@
 import tkinter as tk
+from typing import Any
 
 from vertyces.vertex.vertex3f import Vertex3f
 
@@ -10,6 +11,7 @@ class WindowTk(Window):
     _window: tk.Tk
 
     def __init__(self, width: int, height: int, title: str) -> None:
+        super().__init__(width, height)
         self._window = tk.Tk()
         self.set_title(title)
 
@@ -18,6 +20,11 @@ class WindowTk(Window):
         )
         self.canvas.pack(fill="both", expand=True)
         self._window.protocol("WM_DELETE_WINDOW", self._on_close)
+        self._window.bind("<Configure>", self._on_resize)
+
+    def _on_resize(self, event: Any) -> None:
+        self._width = event.width
+        self._height = event.height
 
     def set_background_color(self, color: Vertex3f) -> None:
         self._window.configure(bg=v3f_to_hex(color))

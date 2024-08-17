@@ -9,14 +9,29 @@ from game_manager.io.mouse import MouseButton
 
 class GraphicalComponent(ABC):
     _visible: bool
+    _absolute_position: bool
+    _components: list["GraphicalComponent"]
 
     bounds: Rectangle
 
     def __init__(
-        self, position: Vertex2f, dimension: Vertex2f, visible: bool = True
+        self,
+        position: Vertex2f,
+        dimension: Vertex2f,
+        visible: bool = True,
+        has_absolute_position: bool = False,
     ) -> None:
         self.bounds = Rectangle(position, dimension)
         self._visible = visible
+        self._absolute_position = has_absolute_position
+
+        self._components = []
+
+    def add_component(self, component: "GraphicalComponent") -> None:
+        self._components.append(component)
+
+    def remove_component(self, component: "GraphicalComponent") -> None:
+        self._components.remove(component)
 
     @classmethod
     def from_rectangle(cls, rectangle: Rectangle) -> "GraphicalComponent":
@@ -29,8 +44,35 @@ class GraphicalComponent(ABC):
     def visible(self) -> bool:
         return self._visible
 
+    @property
+    def has_absolute_position(self) -> bool:
+        return self._absolute_position
+
+    def _render(self, renderer: Renderer) -> None:
+        if self.visible:
+            current_offset = renderer.offset.translated(self.bounds.position)
+            renderer.set_offset(current_offset)
+            self.render(renderer)
+            for component in self._components:
+                renderer.set_offset(current_offset)
+                component._render(renderer)
+
     @abstractmethod
     def render(self, renderer: Renderer) -> None: ...
+
+    def _on_click(
+        self, button: MouseButton, position: Vertex2f, start_position: Vertex2f
+    ) -> bool:
+        position_translated = position.translated(self.bounds.position.inverted())
+        start_position_translated = start_position.translated(
+            self.bounds.position.inverted()
+        )
+        for component in self._components:
+            if component.on_click(
+                button, position_translated, start_position_translated
+            ):
+                return True
+        return self.on_click(button, position_translated, start_position_translated)
 
     @abstractmethod
     def on_click(
