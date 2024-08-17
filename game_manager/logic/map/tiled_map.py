@@ -75,7 +75,7 @@ class TiledMap(Map, ABC):
         new_position: Vertex2f | None = None
         for possible_new_position in possible_new_positions:
             new_position = possible_new_position
-            new_bounds = Rectangle(possible_new_position, entity.bounds._bounds)
+            new_bounds = Rectangle(possible_new_position, entity.bounds.dimensions)
             for other_entity in self._entities.values():
                 if other_entity == entity:
                     continue

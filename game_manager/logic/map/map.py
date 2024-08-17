@@ -30,7 +30,7 @@ class Map(UIDObject, ABC):
             if isinstance(entity, EntityMoveable):
                 new_position = self._calculate_entity_new_position(delta_time, entity)
                 if new_position:
-                    entity.bounds = Rectangle(new_position, entity.bounds._bounds)
+                    entity.bounds = Rectangle(new_position, entity.bounds.dimensions)
             entity.update(delta_time)
 
     def _calculate_entity_new_position(
@@ -47,7 +47,7 @@ class Map(UIDObject, ABC):
         new_position: Vertex2f | None = None
         for possible_new_position in possible_new_positions:
             new_position = possible_new_position
-            new_bounds = Rectangle(possible_new_position, entity.bounds._bounds)
+            new_bounds = Rectangle(possible_new_position, entity.bounds.dimensions)
             for other_entity in self._entities.values():
                 if other_entity == entity:
                     continue

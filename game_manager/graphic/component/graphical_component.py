@@ -20,7 +20,7 @@ class GraphicalComponent(ABC):
 
     @classmethod
     def from_rectangle(cls, rectangle: Rectangle) -> "GraphicalComponent":
-        return cls(rectangle._p1, rectangle._bounds)
+        return cls(rectangle._p1, rectangle.dimensions)
 
     def show(self, visible: bool = True) -> None:
         self._visible = visible
