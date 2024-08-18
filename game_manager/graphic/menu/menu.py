@@ -23,7 +23,7 @@ class Menu(ABC):
     def _on_click(
         self, button: MouseButton, position: Vertex2f, start_position: Vertex2f
     ) -> None:
-        # TODO: sort component by z-index
+        # TODO: sort component by z-index ?
         for component in self._components:
             if component._on_click(button, position, start_position):
                 break
@@ -34,6 +34,7 @@ class Menu(ABC):
 
         for component in self._components:
             renderer.set_offset(Vertex2f(0, 0))
+            renderer.set_z_index(0)
             component._render(renderer)
 
     @abstractmethod
