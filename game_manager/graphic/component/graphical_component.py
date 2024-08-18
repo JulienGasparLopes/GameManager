@@ -9,21 +9,15 @@ from game_manager.io.mouse import MouseButton
 
 class GraphicalComponent(ABC):
     _visible: bool
-    _absolute_position: bool
     _components: list["GraphicalComponent"]
 
     bounds: Rectangle
 
     def __init__(
-        self,
-        position: Vertex2f,
-        dimension: Vertex2f,
-        visible: bool = True,
-        has_absolute_position: bool = False,
+        self, position: Vertex2f, dimension: Vertex2f, visible: bool = True
     ) -> None:
         self.bounds = Rectangle(position, dimension)
         self._visible = visible
-        self._absolute_position = has_absolute_position
 
         self._components = []
 
@@ -43,10 +37,6 @@ class GraphicalComponent(ABC):
     @property
     def visible(self) -> bool:
         return self._visible
-
-    @property
-    def has_absolute_position(self) -> bool:
-        return self._absolute_position
 
     def _render(self, renderer: Renderer) -> None:
         if self.visible:
