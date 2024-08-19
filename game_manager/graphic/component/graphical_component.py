@@ -69,16 +69,23 @@ class GraphicalComponent(ABC):
     def _on_click(
         self, button: MouseButton, position: Vertex2f, start_position: Vertex2f
     ) -> bool:
+        if not self.visible:
+            return False
+
+        if not self.bounds.contains(position):
+            return False
+
         position_translated = position.translated(self.bounds.position.inverted())
         start_position_translated = start_position.translated(
             self.bounds.position.inverted()
         )
         for component in self._components:
-            if component.on_click(
+            if component._on_click(
                 button, position_translated, start_position_translated
             ):
                 return True
-        return self.on_click(button, position_translated, start_position_translated)
+
+        return self.on_click(button, position, start_position)
 
     @abstractmethod
     def on_click(
