@@ -69,8 +69,8 @@ class BaseLogicManager(
     def add_map(self, map: TMap) -> None:
         self._maps[map.uid] = map
 
-    def remove_map(self, map_uid: Uid) -> None:
-        del self._maps[map_uid]
+    def remove_map(self, map_uid: Uid) -> TMap:
+        return self._maps.pop(map_uid)
 
     def get_map(self, map_uid: Uid) -> TMap | None:
         return self._maps[map_uid]
