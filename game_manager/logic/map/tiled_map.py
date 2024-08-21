@@ -53,7 +53,7 @@ class TiledMap(Map):
 
     @property
     def height_in_tiles(self) -> int:
-        return self._height
+        return self._height_in_tiles
 
     @property
     def width(self) -> int:
