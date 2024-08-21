@@ -69,11 +69,11 @@ class BaseLogicManager(
     def add_map(self, map: TMap) -> None:
         self._maps[map.uid] = map
 
-    def remove_map(self, map: TMap) -> None:
-        del self._maps[map.uid]
+    def remove_map(self, map_uid: Uid) -> None:
+        del self._maps[map_uid]
 
-    def get_map(self, uid: Uid) -> TMap | None:
-        return self._maps[uid]
+    def get_map(self, map_uid: Uid) -> TMap | None:
+        return self._maps[map_uid]
 
     @property
     def is_disposed(self) -> bool:
