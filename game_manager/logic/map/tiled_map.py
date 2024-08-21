@@ -1,5 +1,3 @@
-from abc import ABC
-
 from vertyces.form.rectangle import Rectangle
 from vertyces.vertex.vertex2f import Vertex2f
 
@@ -8,7 +6,7 @@ from game_manager.logic.map.map import Map
 from game_manager.logic.map.tile import TILE_SIZE, VOID_TILE, Tile
 
 
-class TiledMap(Map, ABC):
+class TiledMap(Map):
     _width_in_tiles: int
     _height_in_tiles: int
     _width: int

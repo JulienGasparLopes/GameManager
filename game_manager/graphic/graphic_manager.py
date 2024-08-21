@@ -14,7 +14,7 @@ from game_manager.io.mouse import Mouse, MouseButton
 from game_manager.messaging.message_client import MessageClient, MessageManagerType
 
 
-class GraphicManager(
+class BaseGraphicManager(
     MessageClient[MessageManagerType], Generic[MessageManagerType], ABC
 ):
     _current_fps_counter: int = 0

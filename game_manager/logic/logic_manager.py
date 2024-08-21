@@ -11,7 +11,7 @@ from game_manager.messaging.message_client import MessageClient, MessageManagerT
 TMap = TypeVar("TMap", bound=Map)
 
 
-class LogicManager(
+class BaseLogicManager(
     MessageClient[MessageManagerType], Generic[MessageManagerType, TMap], ABC
 ):
     _current_ups_counter: int = 0
