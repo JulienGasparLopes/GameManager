@@ -30,6 +30,8 @@ class Menu(ABC):
         self.on_click(button, position, start_position)
 
     def _render(self, delta_ns: float, renderer: Renderer) -> None:
+        renderer.set_offset(Vertex2f(0, 0))
+        renderer.set_z_index(0)
         self.render(delta_ns, renderer)
 
         for component in self._components:
