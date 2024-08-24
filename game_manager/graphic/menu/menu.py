@@ -26,7 +26,7 @@ class Menu(ABC):
         # TODO: sort component by z-index ?
         for component in self._components:
             if component._on_click(button, position, start_position):
-                break
+                return
         self.on_click(button, position, start_position)
 
     def _render(self, delta_ns: float, renderer: Renderer) -> None:
