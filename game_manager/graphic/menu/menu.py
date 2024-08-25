@@ -25,7 +25,15 @@ class Menu(ABC):
     ) -> None:
         # TODO: sort component by z-index ?
         for component in self._components:
-            if component._on_click(button, position, start_position):
+            position_translated = position.translated(
+                component.bounds.position.inverted()
+            )
+            start_position_translated = start_position.translated(
+                component.bounds.position.inverted()
+            )
+            if component._on_click(
+                button, position_translated, start_position_translated
+            ):
                 return
         self.on_click(button, position, start_position)
 
