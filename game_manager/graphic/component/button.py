@@ -25,10 +25,11 @@ class Button(GraphicalComponent, ABC):
     def on_click(
         self, button: MouseButton, position: Vertex2f, start_position: Vertex2f
     ) -> bool:
+        # Set at_position to (0, 0) as click is relative to the button
         if (
             button == MouseButton.LEFT
-            and self.bounds.contains(position)
-            and self.bounds.contains(start_position)
+            and self.bounds.at_position(Vertex2f(0, 0)).contains(position)
+            and self.bounds.at_position(Vertex2f(0, 0)).contains(start_position)
         ):
             self._action_callback()
             return True
