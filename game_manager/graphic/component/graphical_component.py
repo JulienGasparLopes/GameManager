@@ -10,6 +10,7 @@ from game_manager.io.mouse import MouseButton
 class GraphicalComponent(ABC):
     _visible: bool
     _z_index: int
+    _allow_click_out_of_bounds: bool
     _components: list["GraphicalComponent"]
 
     bounds: Rectangle
@@ -20,10 +21,12 @@ class GraphicalComponent(ABC):
         dimension: Vertex2f,
         z_index: int = 0,
         visible: bool = True,
+        allow_click_out_of_bounds: bool = False,
     ) -> None:
         self.bounds = Rectangle(position, dimension)
         self._visible = visible
         self._z_index = z_index
+        self._allow_click_out_of_bounds = allow_click_out_of_bounds
 
         self._components = []
 
@@ -72,7 +75,7 @@ class GraphicalComponent(ABC):
         if not self.visible:
             return False
 
-        if not self.bounds.contains(position):
+        if not self.bounds.contains(position) and not self._allow_click_out_of_bounds:
             return False
 
         position_translated = position.translated(self.bounds.position.inverted())
