@@ -85,7 +85,7 @@ class GraphicalComponent(ABC):
             ):
                 return True
 
-        return self.on_click(button, position, start_position)
+        return self.on_click(button, position_translated, start_position_translated)
 
     @abstractmethod
     def on_click(
