@@ -1,4 +1,4 @@
-# Todo: add compatibility for other keyboard layouts
+# TODO: put the "tk" logic on the right place
 SPECIAL_KEY_TO_KEYSYM = {
     "ampersand": "1",
     "eacute": "2",
@@ -20,14 +20,16 @@ class Keyboard:
         self._key_pressed = {}
 
     def _key_press(self, event) -> None:  # type: ignore[no-untyped-def]
-        self._key_pressed[event.keysym] = True
-        if event.keysym in SPECIAL_KEY_TO_KEYSYM:
-            self._key_pressed[SPECIAL_KEY_TO_KEYSYM[event.keysym]] = True
+        key_key = event.keysym.lower()
+        self._key_pressed[key_key] = True
+        if key_key in SPECIAL_KEY_TO_KEYSYM:
+            self._key_pressed[SPECIAL_KEY_TO_KEYSYM[key_key]] = True
 
     def _key_release(self, event) -> None:  # type: ignore[no-untyped-def]
-        self._key_pressed[event.keysym] = False
-        if event.keysym in SPECIAL_KEY_TO_KEYSYM:
-            self._key_pressed[SPECIAL_KEY_TO_KEYSYM[event.keysym]] = False
+        key_key = event.keysym.lower()
+        self._key_pressed[key_key] = False
+        if key_key in SPECIAL_KEY_TO_KEYSYM:
+            self._key_pressed[SPECIAL_KEY_TO_KEYSYM[key_key]] = False
 
     def is_pressed(self, key: str) -> bool:
         return self._key_pressed.get(key, False)

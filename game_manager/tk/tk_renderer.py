@@ -8,6 +8,7 @@ from game_manager.tk.tk_render_info import (
     RenderInfoTk,
     RenderInfoTkLine,
     RenderInfoTkRect,
+    RenderInfoTkRectOutline,
     RenderInfoTkText,
 )
 from game_manager.tk.tk_window import WindowTk
@@ -16,7 +17,7 @@ T = TypeVar("T")
 
 
 class RendererTk(Renderer):
-    _render_info_list: list[RenderInfoTk] = []  # type: ignore [type-arg]
+    _render_info_list: list[RenderInfoTk] = []
 
     _window_tk: WindowTk
 
@@ -50,7 +51,16 @@ class RendererTk(Renderer):
         p1_t = p1.translated(self.offset)
         p2_t = p2.translated(self.offset)
         self._render_info_list.append(
-            RenderInfoTkRect(p1_t, p2_t, content, self.z_index + z_index)  # type: ignore [arg-type]
+            RenderInfoTkRect(p1_t, p2_t, content, self.z_index + z_index)
+        )
+
+    def draw_rect_outline(
+        self, p1: Vertex2f, p2: Vertex2f, content: Vertex3f, z_index: int = 0
+    ) -> None:
+        p1_t = p1.translated(self.offset)
+        p2_t = p2.translated(self.offset)
+        self._render_info_list.append(
+            RenderInfoTkRectOutline(p1_t, p2_t, content, self.z_index + z_index)
         )
 
     def draw_text(

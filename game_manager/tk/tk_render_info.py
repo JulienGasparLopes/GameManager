@@ -29,9 +29,9 @@ class RenderInfoTkLine(RenderInfoTk[Vertex3f]):
     def render(self, canvas: Canvas) -> None:
         canvas.create_line(
             self.p1.x,
-            self.p1.y,
+            canvas.winfo_height() - self.p1.y,
             self.p2.x,
-            self.p2.y,
+            canvas.winfo_height() - self.p2.y,
             fill=v3f_to_hex(self.content),
             width=2,
         )
@@ -42,17 +42,32 @@ class RenderInfoTkRect(RenderInfoTk["ImageTk | Vertex3f"]):
         if isinstance(self.content, Vertex3f):
             points = [
                 self.p1.x,
-                self.p1.y,
+                canvas.winfo_height() - self.p1.y,
                 self.p1.x,
-                self.p2.y,
+                canvas.winfo_height() - self.p2.y,
                 self.p2.x,
-                self.p2.y,
+                canvas.winfo_height() - self.p2.y,
                 self.p2.x,
-                self.p1.y,
+                canvas.winfo_height() - self.p1.y,
             ]
             canvas.create_polygon(points, fill=v3f_to_hex(self.content))
         else:
             self.content.render(canvas, self.p1)
+
+
+class RenderInfoTkRectOutline(RenderInfoTk["Vertex3f"]):
+    def render(self, canvas: Canvas) -> None:
+        points = [
+            self.p1.x,
+            canvas.winfo_height() - self.p1.y,
+            self.p1.x,
+            canvas.winfo_height() - self.p2.y,
+            self.p2.x,
+            canvas.winfo_height() - self.p2.y,
+            self.p2.x,
+            canvas.winfo_height() - self.p1.y,
+        ]
+        canvas.create_polygon(points, outline=v3f_to_hex(self.content))
 
 
 class RenderInfoTkText(RenderInfoTk[Vertex3f]):
@@ -67,7 +82,7 @@ class RenderInfoTkText(RenderInfoTk[Vertex3f]):
     def render(self, canvas: Canvas) -> None:
         canvas.create_text(
             self.p1.x,
-            self.p1.y,
+            canvas.winfo_height() - self.p1.y,
             text=self.text,
             fill=v3f_to_hex(self.content),
             anchor="nw",
