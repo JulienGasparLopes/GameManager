@@ -10,20 +10,32 @@ from game_manager.logic.uid_object import Uid, UIDObject
 
 class Map(UIDObject, ABC):
     _entities: dict[Uid, Entity]
+    _entities_to_add: list[Entity]
+    _entities_to_remove: list[Uid]
 
     def __init__(self) -> None:
         self._entities = {}
 
     def add_entity(self, entity: Entity) -> None:
-        self._entities[entity.uid] = entity
+        self._entities_to_add.append(entity)
 
     def remove_entity(self, entity_uid: Uid) -> Entity:
-        return self._entities.pop(entity_uid)
+        entity_to_remove = self._entities.get(entity_uid)
+        self._entities_to_remove.append(entity_to_remove.uid)
+        return entity_to_remove
 
     def get_entity(self, uid: Uid) -> Entity | None:
         return self._entities.get(uid)
 
     def _update(self, delta_time: float) -> None:
+        for entity_uid in self._entities_to_remove:
+            if entity_uid in self._entities:
+                del self._entities[entity_uid]
+        self._entities_to_remove = []
+        for entity in self._entities_to_add:
+            self._entities[entity.uid] = entity
+        self._entities_to_add = []
+
         self.update(delta_time)
         for entity in self._entities.values():
             if isinstance(entity, EntityMoveable):
