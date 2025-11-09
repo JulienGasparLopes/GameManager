@@ -15,6 +15,8 @@ class Map(UIDObject, ABC):
 
     def __init__(self) -> None:
         self._entities = {}
+        self._entities_to_add = []
+        self._entities_to_remove = []
 
     def add_entity(self, entity: Entity) -> None:
         self._entities_to_add.append(entity)
