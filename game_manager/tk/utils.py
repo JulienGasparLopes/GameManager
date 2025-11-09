@@ -17,7 +17,7 @@ def initialize_tk_context() -> tuple[Window, Renderer, Mouse, Keyboard]:
     mouse = Mouse()
 
     def _get_mouse_position(event) -> Vertex2f:
-        height = window.canvas.winfo_reqheight()
+        height = window.canvas.winfo_height()
         return Vertex2f(event.x, height - event.y)
 
     def _handle_left_mouse_release(event: Any) -> dict[str, MouseButton]:
