@@ -21,23 +21,23 @@ def initialize_tk_context() -> tuple[Window, Renderer, Mouse, Keyboard]:
         return Vertex2f(event.x, height - event.y)
 
     def _handle_left_mouse_release(event: Any) -> dict[str, MouseButton]:
-        mouse.__mouse_release__(_get_mouse_position(), MouseButton.LEFT)
+        mouse.__mouse_release__(_get_mouse_position(event), MouseButton.LEFT)
         return {}
 
     def _handle_right_mouse_release(event: Any) -> object:
-        mouse.__mouse_release__(_get_mouse_position(), MouseButton.RIGHT)
+        mouse.__mouse_release__(_get_mouse_position(event), MouseButton.RIGHT)
         return {}
 
     def _handle_mouse_move(event: Any) -> object:
-        mouse.__mouse_move__(_get_mouse_position())
+        mouse.__mouse_move__(_get_mouse_position(event))
         return {}
 
     def _handle_left_mouse_drag_move(event: Any) -> object:
-        mouse.__mouse_drag_move__(_get_mouse_position(), MouseButton.LEFT)
+        mouse.__mouse_drag_move__(_get_mouse_position(event), MouseButton.LEFT)
         return {}
 
     def _handle_right_mouse_drag_move(event: Any) -> object:
-        mouse.__mouse_drag_move__(_get_mouse_position(), MouseButton.RIGHT)
+        mouse.__mouse_drag_move__(_get_mouse_position(event), MouseButton.RIGHT)
         return {}
 
     window._window.bind("<KeyPress>", keyboard._key_press)
