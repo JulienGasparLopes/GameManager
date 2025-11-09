@@ -67,7 +67,7 @@ class RenderInfoTkRectOutline(RenderInfoTk["Vertex3f"]):
             self.p2.x,
             canvas.winfo_height() - self.p1.y,
         ]
-        canvas.create_polygon(points, outline=v3f_to_hex(self.content))
+        canvas.create_polygon(points, fill="", outline=v3f_to_hex(self.content))
 
 
 class RenderInfoTkText(RenderInfoTk[Vertex3f]):
