@@ -32,7 +32,7 @@ class Mouse:
         self._position = position.clone()
         if self._drag_origin is None:
             self._drag_origin = position.clone()
-            self._drag_button = mouse_button
+            self._drag_mouse_button = mouse_button
 
     def __mouse_release__(self, position: Vertex2f, mouse_button: MouseButton) -> None:
         if self._button_release_callback:
