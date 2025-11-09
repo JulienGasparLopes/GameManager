@@ -18,6 +18,9 @@ class Mouse:
     _drag_origin: Vertex2f | None = None
     _drag_mouse_button: MouseButton | None = None
 
+    _press_origin: Vertex2f | None = None
+    _press_mouse_button: MouseButton | None = None
+
     _button_release_callback: ButtonReleaseCallback | None = None
 
     def __init__(self) -> None:
@@ -34,6 +37,11 @@ class Mouse:
             self._drag_origin = position.clone()
             self._drag_mouse_button = mouse_button
 
+    def __mouse_press__(self, position: Vertex2f, mouse_button: MouseButton) -> None:
+        self._position = position.clone()
+        self._press_origin = position.clone()
+        self._press_mouse_button = mouse_button
+
     def __mouse_release__(self, position: Vertex2f, mouse_button: MouseButton) -> None:
         if self._button_release_callback:
             self._button_release_callback(
@@ -42,6 +50,8 @@ class Mouse:
         self._position = position.clone()
         self._drag_origin = None
         self._drag_mouse_button = None
+        self._press_origin = None
+        self._press_mouse_button = None
 
     def set_button_release_callback(
         self, callback: ButtonReleaseCallback | None
@@ -63,6 +73,18 @@ class Mouse:
     @property
     def drag_button(self) -> MouseButton | None:
         return self._drag_mouse_button
+
+    @property
+    def is_pressed(self) -> bool:
+        return self._press_origin is not None
+
+    @property
+    def press_origin(self) -> Vertex2f | None:
+        return self._press_origin.clone() if self._press_origin else None
+
+    @property
+    def press_button(self) -> MouseButton | None:
+        return self._press_mouse_button
 
     # def get_relative_position(self, component: "GraphicComponent") -> Vertex2f:
     #     return self._position.translated(component.position.multiplied(-1))

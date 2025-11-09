@@ -28,6 +28,14 @@ def initialize_tk_context() -> tuple[Window, Renderer, Mouse, Keyboard]:
         mouse.__mouse_release__(_get_mouse_position(event), MouseButton.RIGHT)
         return {}
 
+    def _handle_left_mouse_press(event: Any) -> object:
+        mouse.__mouse_press__(_get_mouse_position(event), MouseButton.LEFT)
+        return {}
+
+    def _handle_right_mouse_press(event: Any) -> object:
+        mouse.__mouse_press__(_get_mouse_position(event), MouseButton.RIGHT)
+        return {}
+
     def _handle_mouse_move(event: Any) -> object:
         mouse.__mouse_move__(_get_mouse_position(event))
         return {}
@@ -47,6 +55,8 @@ def initialize_tk_context() -> tuple[Window, Renderer, Mouse, Keyboard]:
     window._window.bind("<B1-Motion>", _handle_left_mouse_drag_move)
     window._window.bind("<B2-Motion>", _handle_right_mouse_drag_move)
 
+    window.canvas.bind("<ButtonPress-1>", _handle_left_mouse_press)
+    window.canvas.bind("<ButtonPress-2>", _handle_right_mouse_press)
     window.canvas.bind("<ButtonRelease-1>", _handle_left_mouse_release)
     window.canvas.bind("<ButtonRelease-2>", _handle_right_mouse_release)
 
