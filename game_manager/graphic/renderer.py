@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from vertyces.vertex.vertex2f import Vertex2f
 from vertyces.vertex.vertex3f import Vertex3f
 
@@ -27,6 +28,11 @@ class Renderer(ABC):
     ) -> None: ...
 
     @abstractmethod
+    def draw_rect_outline(
+        self, p1: Vertex2f, p2: Vertex2f, content: Vertex3f, z_index: int = 0
+    ) -> None: ...
+
+    @abstractmethod
     def draw_text(
         self, p: Vertex2f, text: str, color: Vertex3f, z_index: int = 0
     ) -> None: ...
@@ -43,4 +49,5 @@ class Renderer(ABC):
         return self._current_offset.clone()
 
     def set_offset(self, offset: Vertex2f) -> None:
+        self._current_offset = offset
         self._current_offset = offset
