@@ -6,7 +6,7 @@ authors = ["JulienGL <jgl94@free.fr>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<4.0"
 mypy = "^1.11.1"
 vertyces = {git = "https://github.com/JulienGasparLopes/Vertyces.git"}
 pillow = "10.0.0"
